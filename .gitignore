@@ -1,6 +1,7 @@
 MagicDatabaseDownloader/cards_db/
 MagicDatabaseDownloader/*.json
 MagicDatabaseDownloader/JSONs/*.json
+MagicDatabaseDownloader/*.jpg
 
 # --- JUPYTER NOTEBOOK GARBAGE FILES ---
 
