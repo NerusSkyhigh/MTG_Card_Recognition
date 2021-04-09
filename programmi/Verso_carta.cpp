@@ -1,21 +1,15 @@
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
-#include <iostream>
-#include<cstring>
-using namespace std;
-using namespace cv;
+#include "verse_and_set.h"
 
-const char* template_window = "Template Window";
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/common/2.jpg";
 const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/rare/1.jpg";
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/mythic/124.jpg";
+const char* window_src = "Card selected";
 
-
-
-
-int main(int argc, char *argv[]) {
+#define SHOWOUTPUT true
+#define SHOWSTARTINGIMAGE false
+#define SHOWEXRACTS true
+int main(int argc, char* argv[]) {
     Mat img;
     if (argc < 2) {
         img = imread(path_image, IMREAD_COLOR);
@@ -23,12 +17,6 @@ int main(int argc, char *argv[]) {
     }
     else {
         img = imread(argv[1], IMREAD_COLOR);
-    }
-    glob(png_dir, fn, true);
-
-    if (fn.size() < 1) {
-        cerr << "Can't find png/jpg in foulder" << endl;
-        return EXIT_FAILURE;
     }
     if (img.empty()) {
         cerr << "Can't read the image" << endl;
