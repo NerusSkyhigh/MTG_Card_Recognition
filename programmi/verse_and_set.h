@@ -1,11 +1,5 @@
-#pragma once
-
-
-
-
-#ifndef __VERSE_AND_SET_H_
-#define __VERSE_AND_SET_H_
-
+#ifndef __VERSE_AND_SET_H__
+#define __VERSE_AND_SET_H__
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
@@ -13,8 +7,6 @@
 #include<cstring>
 using namespace std;
 using namespace cv;
-
-
 
 
 
@@ -48,4 +40,3 @@ using namespace cv;
 
 
 #endif
-
