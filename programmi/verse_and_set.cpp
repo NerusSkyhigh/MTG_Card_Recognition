@@ -120,6 +120,7 @@ void verse_and_set(Mat img) {
         ret /= ((templ.cols * templ.rows * templ.channels()) - sott);
         return ret;
     }
+
     void find_symbol_center(Point ret[2]) {
         ret[0].x = (int)(card.cols * CONST_LENGHT_SYM) - radius_l / 2;
         bound_control(ret[0].x, card.cols);
