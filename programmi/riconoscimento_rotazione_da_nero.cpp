@@ -48,7 +48,6 @@ int main(int argc, char* argv[]) {
         cerr << "Can't read the image" << endl;
         return EXIT_FAILURE;
     }
-    flip(img, img, -1);
 
     if (GUI) {
         if (SHOWINPUT) {
