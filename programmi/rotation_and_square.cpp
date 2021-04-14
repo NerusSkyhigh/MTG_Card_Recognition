@@ -1,12 +1,22 @@
+#include "opencv2/imgproc.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
 #include <iostream>
 #include<cstring>
+#include<cmath>
 using namespace std;
 using namespace cv;
 
-const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
+
+//const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
+const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
+
+const int thresh_min = 128;
+const int thresh_max = 256;
+Mat canny_output;
+RotatedRect bigger_rect;
+
+//const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
 const char* input = "Card";
 const char* output = "output";
 
@@ -32,8 +42,13 @@ void calculate_points_and_hights();
 
 Mat copy_rectangle(Mat& imm, Point& start, int hights[2]);
 
-Mat get_cropping(Mat &img);
+Mat get_cropping(Mat& img);
 Mat find_bottom(Mat bottom, Mat top);
+
+
+
+
+Mat rotate_card(Mat img);
 
 int main(int argc, char* argv[]) {
     Mat img;
@@ -51,20 +66,27 @@ int main(int argc, char* argv[]) {
 
     if (GUI) {
         if (SHOWINPUT) {
+
             namedWindow(input, WINDOW_KEEPRATIO);
             imshow(input, img);
+            cout << "input sizes " << img.size() << endl;
         }
     }
-    Mat card_bottom = get_cropping(img);
+    Mat card_rotated = rotate_card(img);
+    Mat cropped = get_cropping(card_rotated);
     if (GUI) {
         if (SHOWOUTPUT) {
             namedWindow(output, WINDOW_AUTOSIZE);
-            imshow( output, card_bottom);
+            imshow(output, cropped);
+            cout << "output sizes" << card_rotated.size() << endl;
             waitKey(0);
         }
     }
     return 0;
 }
+
+
+
 
 
 
@@ -85,8 +107,8 @@ void calculate_points_and_hights() {
     points[0].y = card2.rows * Y_PERC_CENTER_BOTTOM;
 
 
-    points[1].x = card2.cols * ( X_PERC_CENTER_BOTTOM);
-    points[1].y = card2.rows * (1 - Y_PERC_CENTER_BOTTOM)-hights[1];
+    points[1].x = card2.cols * (X_PERC_CENTER_BOTTOM);
+    points[1].y = card2.rows * (1 - Y_PERC_CENTER_BOTTOM) - hights[1];
     return;
 }
 
@@ -95,7 +117,7 @@ Mat find_bottom(Mat bottom, Mat top) {
     int top_black_count = 0;
     for (int y = 0;y < bottom.cols;y++) {
         for (int x = 0;x < bottom.rows;x++) {
-            if (bottom.at<uchar>(x,y) < MARGINE) {
+            if (bottom.at<uchar>(x, y) < MARGINE) {
                 bottom_black_count++;
             }
             if (top.at<uchar>(x, y) < MARGINE) {
@@ -118,4 +140,43 @@ Mat get_cropping(Mat& img) {
     Mat bottom_img = copy_rectangle(card2, points[0], hights);
     Mat top_img = copy_rectangle(card2, points[1], hights);
     return find_bottom(bottom_img, top_img);
+}
+
+RotatedRect find_bigger_rectangle(vector<vector<Point>> contours) {
+    RotatedRect minRect = minAreaRect(contours[0]);
+    for (int i = 1;i < contours.size();i++) {
+        RotatedRect rect_cont = minAreaRect(contours[i]);
+        if (minRect.size.height + minRect.size.width < rect_cont.size.height + rect_cont.size.width) {
+            minRect = rect_cont;
+        }
+    }
+    return minRect;
+}
+
+void find_rectangle() {
+    Canny(card2, canny_output, thresh_min, thresh_max);
+    vector<vector<Point> > contours;
+    findContours(canny_output, contours, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
+    bigger_rect = find_bigger_rectangle(contours);
+}
+
+
+Mat copy_to_cropped_rectangle() {
+    Point starting_point;
+    starting_point.x = bigger_rect.center.x - bigger_rect.size.width / 2 + 1;
+    starting_point.y = bigger_rect.center.y - bigger_rect.size.height / 2 + 1;
+    Mat ret = card2(cv::Rect(starting_point.x, starting_point.y, bigger_rect.size.width, bigger_rect.size.height));
+
+    return ret;
+}
+
+Mat rotate_card(Mat img) {
+    card2 = img;
+    find_rectangle();
+
+    Mat r = getRotationMatrix2D(bigger_rect.center, bigger_rect.angle, 1.0);
+    warpAffine(card2, card2, r, card2.size());
+    return copy_to_cropped_rectangle();
+
+
 }
