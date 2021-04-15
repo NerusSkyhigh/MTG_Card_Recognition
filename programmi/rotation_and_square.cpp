@@ -9,7 +9,8 @@ using namespace cv;
 
 
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
-const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
+//const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
+const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta2.png";
 
 const int thresh_min = 128;
 const int thresh_max = 256;
@@ -38,7 +39,6 @@ Mat card2;
 Point points[2];
 int hights[2];
 void calculate_points_and_hights();
-
 
 Mat copy_rectangle(Mat& imm, Point& start, int hights[2]);
 
@@ -166,14 +166,18 @@ Mat copy_to_cropped_rectangle() {
     starting_point.x = bigger_rect.center.x - bigger_rect.size.width / 2 + 1;
     starting_point.y = bigger_rect.center.y - bigger_rect.size.height / 2 + 1;
     Mat ret = card2(cv::Rect(starting_point.x, starting_point.y, bigger_rect.size.width, bigger_rect.size.height));
-
     return ret;
 }
 
 Mat rotate_card(Mat img) {
     card2 = img;
     find_rectangle();
-
+    if (bigger_rect.size.width > bigger_rect.size.height) {
+        double prova = bigger_rect.size.width;
+        bigger_rect.size.width = bigger_rect.size.height;
+        bigger_rect.size.height = prova;
+        bigger_rect.angle += 90;
+    }
     Mat r = getRotationMatrix2D(bigger_rect.center, bigger_rect.angle, 1.0);
     warpAffine(card2, card2, r, card2.size());
     return copy_to_cropped_rectangle();
