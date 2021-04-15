@@ -27,7 +27,8 @@ const char* output = "output";
 
 #define MARGINE_PERCENTAGE 10
 
-#define MARGINE 256*MARGINE_PERCENTAGE/100
+#define MARGINE_BLACK 256*MARGINE_PERCENTAGE/100
+#define MARGINE_WHITE 256*(100-MARGINE_PERCENTAGE)/100
 
 #define X_PERC_CENTER_BOTTOM 0.059523
 #define Y_PERC_CENTER_BOTTOM 0.92948
@@ -73,6 +74,9 @@ int main(int argc, char* argv[]) {
         }
     }
     Mat card_rotated = rotate_card(img);
+    namedWindow("lol", WINDOW_AUTOSIZE);
+    imshow("lol", card_rotated);
+
     Mat cropped = get_cropping(card_rotated);
     if (GUI) {
         if (SHOWOUTPUT) {
@@ -117,10 +121,10 @@ Mat find_bottom(Mat bottom, Mat top) {
     int top_black_count = 0;
     for (int y = 0;y < bottom.cols;y++) {
         for (int x = 0;x < bottom.rows;x++) {
-            if (bottom.at<uchar>(x, y) < MARGINE) {
+            if (bottom.at<uchar>(x, y) < MARGINE_BLACK) {
                 bottom_black_count++;
             }
-            if (top.at<uchar>(x, y) < MARGINE) {
+            if (top.at<uchar>(x, y) < MARGINE_BLACK) {
                 top_black_count++;
             }
         }
@@ -169,8 +173,40 @@ Mat copy_to_cropped_rectangle() {
     return ret;
 }
 
+void control_borders() {
+    int border = 1;
+    int x=0,y = 0;
+    cout << "MARGINE WHITE" << MARGINE_WHITE << endl;
+    while (y < card2.size().height) {
+        for (x = 0;x < card2.size().width;x++) {
+            if (card2.at<uchar>(x,y)<MARGINE_WHITE) {
+                copyMakeBorder(card2, card2, border, border,
+                    border, border, BORDER_CONSTANT,255);
+
+                x += card2.size().width*2;
+                y += card2.size().height;
+            }
+        }
+        y += card2.size().height;
+    }
+    y = 0;x = 0;
+    while (x < card2.size().width) {
+        for ( y = 0;y < card2.size().height;y++) {
+            if (card2.at<uchar>(x, y) < MARGINE_WHITE) {
+                copyMakeBorder(card2, card2, border, border,
+                    border, border, BORDER_CONSTANT, 255);
+                x += card2.size().width;
+              y += card2.size().height*2;
+            }
+        }
+        x += card2.size().width;
+    }
+}
+
+
 Mat rotate_card(Mat img) {
     card2 = img;
+    control_borders();
     find_rectangle();
     if (bigger_rect.size.width > bigger_rect.size.height) {
         double prova = bigger_rect.size.width;
