@@ -51,6 +51,7 @@ Mat find_bottom(Mat bottom, Mat top);
 
 Mat rotate_card(Mat img);
 
+
 int main(int argc, char* argv[]) {
     Mat img;
     if (argc < 2) {
@@ -78,6 +79,7 @@ int main(int argc, char* argv[]) {
     imshow("lol", card_rotated);
 
     Mat cropped = get_cropping(card_rotated);
+
     if (GUI) {
         if (SHOWOUTPUT) {
             namedWindow(output, WINDOW_AUTOSIZE);
@@ -176,7 +178,6 @@ Mat copy_to_cropped_rectangle() {
 void control_borders() {
     int border = 1;
     int x=0,y = 0;
-    cout << "MARGINE WHITE" << MARGINE_WHITE << endl;
     while (y < card2.size().height) {
         for (x = 0;x < card2.size().width;x++) {
             if (card2.at<uchar>(x,y)<MARGINE_WHITE) {
@@ -214,9 +215,8 @@ Mat rotate_card(Mat img) {
         bigger_rect.size.height = prova;
         bigger_rect.angle += 90;
     }
+
     Mat r = getRotationMatrix2D(bigger_rect.center, bigger_rect.angle, 1.0);
     warpAffine(card2, card2, r, card2.size());
     return copy_to_cropped_rectangle();
-
-
 }
