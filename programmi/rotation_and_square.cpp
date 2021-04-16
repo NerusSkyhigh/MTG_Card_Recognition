@@ -9,8 +9,8 @@ using namespace cv;
 
 
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
-//const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
-const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta2.png";
+const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
+//const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta2.png";
 
 const int thresh_min = 128;
 const int thresh_max = 256;
@@ -35,7 +35,7 @@ const char* output = "output";
 
 #define Y_BOTTOM_LENGHT_RATEO 1.13898
 #define X_BOTTOM_HIGHT_RATEO 23.4
-
+#define TIMER true
 Mat card2;
 Point points[2];
 int hights[2];
@@ -51,7 +51,8 @@ Mat find_bottom(Mat bottom, Mat top);
 
 Mat rotate_card(Mat img);
 
-
+void start_timer();
+double stop_timer();
 int main(int argc, char* argv[]) {
     Mat img;
     if (argc < 2) {
@@ -68,23 +69,36 @@ int main(int argc, char* argv[]) {
 
     if (GUI) {
         if (SHOWINPUT) {
-
             namedWindow(input, WINDOW_KEEPRATIO);
             imshow(input, img);
             cout << "input sizes " << img.size() << endl;
         }
     }
-    Mat card_rotated = rotate_card(img);
-    namedWindow("lol", WINDOW_AUTOSIZE);
-    imshow("lol", card_rotated);
-
-    Mat cropped = get_cropping(card_rotated);
-
+    Mat card_rotated;
+    Mat cropped;
+    if (TIMER) {
+        double time;
+        start_timer();
+        card_rotated = rotate_card(img);
+        time = stop_timer();
+        cout << "Time to rotate card: " << time << " ms" << endl;
+        start_timer();
+        cropped = get_cropping(card_rotated);
+        time = stop_timer();
+        cout << "Time to crop card:" << time << endl;
+    }
+    else {
+        card_rotated = rotate_card(img);
+        cropped = get_cropping(card_rotated);
+    }
     if (GUI) {
         if (SHOWOUTPUT) {
+            namedWindow("Card Rotated", WINDOW_KEEPRATIO);
+            imshow("Card Rotated", card_rotated);
             namedWindow(output, WINDOW_AUTOSIZE);
             imshow(output, cropped);
-            cout << "output sizes" << card_rotated.size() << endl;
+            cout << "card rotated size " << card_rotated.size() << endl;
+            cout << "output cropped size " << cropped.size() << endl;
             waitKey(0);
         }
     }
@@ -177,31 +191,8 @@ Mat copy_to_cropped_rectangle() {
 
 void control_borders() {
     int border = 1;
-    int x=0,y = 0;
-    while (y < card2.size().height) {
-        for (x = 0;x < card2.size().width;x++) {
-            if (card2.at<uchar>(x,y)<MARGINE_WHITE) {
-                copyMakeBorder(card2, card2, border, border,
-                    border, border, BORDER_CONSTANT,255);
-
-                x += card2.size().width*2;
-                y += card2.size().height;
-            }
-        }
-        y += card2.size().height;
-    }
-    y = 0;x = 0;
-    while (x < card2.size().width) {
-        for ( y = 0;y < card2.size().height;y++) {
-            if (card2.at<uchar>(x, y) < MARGINE_WHITE) {
-                copyMakeBorder(card2, card2, border, border,
-                    border, border, BORDER_CONSTANT, 255);
-                x += card2.size().width;
-              y += card2.size().height*2;
-            }
-        }
-        x += card2.size().width;
-    }
+    copyMakeBorder(card2, card2, border, border,
+        border, border, BORDER_CONSTANT, 255);
 }
 
 
@@ -218,5 +209,17 @@ Mat rotate_card(Mat img) {
 
     Mat r = getRotationMatrix2D(bigger_rect.center, bigger_rect.angle, 1.0);
     warpAffine(card2, card2, r, card2.size());
-    return copy_to_cropped_rectangle();
+    Mat copied = copy_to_cropped_rectangle();
+    return copied;
+}
+double freq;
+int64 start;
+
+void start_timer() {
+     freq = getTickFrequency();
+     start = getTickCount();
+}
+
+double stop_timer() {
+    return double(getTickCount() - start) * 1000 / freq;
 }
