@@ -11,8 +11,8 @@ using namespace cv;
 
 
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
+//const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
 const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
-//const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta2.png";
 
 
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";

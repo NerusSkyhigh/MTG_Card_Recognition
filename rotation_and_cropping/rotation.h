@@ -10,6 +10,11 @@ using namespace cv;
 #ifndef __ROTATION_H__
 #define __ROTATION_H__
 
+#define MARGINE_PERCENTAGE 10
+
+#define MARGINE_BLACK 256*MARGINE_PERCENTAGE/100
+#define MARGINE_WHITE 256*(100-MARGINE_PERCENTAGE)/100
+
 const int thresh_min = 128;
 const int thresh_max = 256;
 
