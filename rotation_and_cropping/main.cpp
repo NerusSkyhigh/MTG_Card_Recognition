@@ -9,26 +9,33 @@
 using namespace std;
 using namespace cv;
 
-
+//Path for debugging images
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
 //const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
 const char* path_image = "C:/Users/User/source/repos/LOOOL/x64/Debug/Storta.png";
-
-
 //const char* path_image = "C:/Users/User/Desktop/cards_db/Amonkhet/uncommon/7.jpg";
+
+
+
+//Constant name of output windows
 const char* input = "Card";
 const char* output = "output";
 
-#define GUI true
-#define SHOWOUTPUT true
-#define SHOWINPUT true
+#define GUI true        //for all the output for debugging
+#define SHOWOUTPUT true //toggle the output image for debugging
+#define SHOWINPUT true  //toggle the input image for debugging
 
+
+//Timer per calcolare il tempo delle funzioni
 #define TIMER true
-
-
 void start_timer();
 double stop_timer();
+
+//MAIN
+
 int main(int argc, char* argv[]) {
+    //The image is taken from the argv if there is once
+    //if there is none it's taken from the variable
     Mat img;
     if (argc < 2) {
         img = imread(path_image, IMREAD_GRAYSCALE);
@@ -41,7 +48,7 @@ int main(int argc, char* argv[]) {
         cerr << "Can't read the image" << endl;
         return EXIT_FAILURE;
     }
-
+    //for now the image is not stored
     if (GUI) {
         if (SHOWINPUT) {
             namedWindow(input, WINDOW_KEEPRATIO);
@@ -79,6 +86,8 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
+
+//Thanks openCv for the counting operation
 double freq;
 int64 start;
 
