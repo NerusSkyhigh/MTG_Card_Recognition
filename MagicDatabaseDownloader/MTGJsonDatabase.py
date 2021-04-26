@@ -71,8 +71,6 @@ class MTGJsonDatabase:
 
 
     def _downloadMTGJson(self)->None:
-        #r = requests.get(url_db, allow_redirects=True)
-        #open(saveLocation, 'wb').write(r.content);
         with requests.get(self.url_db, stream=True, allow_redirects=True) as r:
             r.raise_for_status()
 
@@ -80,7 +78,7 @@ class MTGJsonDatabase:
                 logging.info("An older database exist. I\'ll delete it.")
                 os.remove(self.saveLocation)
 
-            if not os.path.exists(os.path.dirname(saveLocation)):
+            if not os.path.exists(os.path.dirname(self.saveLocation)):
                 logging.info("The folder \'"+self.saveLocation+"\' does not exist. I'll create it.")
                 os.makedirs(os.path.dirname(self.saveLocation))
 
@@ -110,7 +108,7 @@ class MTGJsonDatabase:
 
         if not ( server_sha256 == local_sha256):
             logging.info("Update available. I'll download it.")
-            self._downloadMTGJson(self.url_db, self.saveLocation)
+            self._downloadMTGJson()
         else:
             logging.info("Available version is Uptodate")
 
