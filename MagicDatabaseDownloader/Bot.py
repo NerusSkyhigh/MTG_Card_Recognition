@@ -77,9 +77,7 @@ def card_from_text(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("No card found")
     else:
         card = index.get_card(ranking[0])
-        update.message.reply_text("Probably you searched the card: " + card['name'] + " from the set "+card['setCode'] + ".")
-
-        update.message.reply_text("Wanna buy it? " + card['purchaseUrls']['cardmarket'])
+        update.message.reply_text("Probably you searched the card: " + card['name'] + " from the set "+card['setCode'] + ".\nWanna buy it? " + card['purchaseUrls']['cardmarket'])
 
 
 
