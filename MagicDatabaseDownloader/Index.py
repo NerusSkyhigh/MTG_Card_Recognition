@@ -103,8 +103,10 @@ if __name__ == "__main__":
                 index.add(card, card_id, keywords)
 
 
-    query = input("I'll give you the first results for a query. Enter #exit to leave:\n").split()
-    while(query != "#exit"):
+    query = input("I'll give you the first results for a query. Enter #exit to leave:\n")#.split()
+    query = index.standardize_keywords(query)
+
+    while(not ("#exit" in query)):
         print("You entered:", query)
         ranking = index.ranked_search(query)
         print("\n\n -------RANKING OUTPUT------------\n", ranking, "\n\n")
@@ -114,4 +116,5 @@ if __name__ == "__main__":
             print("No card found")
         else:
             print(index.get_card(ranking[0]) )
-        query = input("I'll give you the first results for a query. Enter #exit to leave:\n").split()
+        query = input("I'll give you the first results for a query. Enter #exit to leave:\n")#.split()
+        query = index.standardize_keywords(query)
