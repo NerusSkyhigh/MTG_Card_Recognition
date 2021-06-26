@@ -1,8 +1,7 @@
-TOKEN = "1802576970:AAHCkWfxPUHc5KuH-CVdeQHK5K0m5_8B7Fs"
+# https://github.com/python-telegram-bot/python-telegram-bot
+import os
 
-#!/usr/bin/env python
-# pylint: disable=C0116,W0613
-# This program is dedicated to the public domain under the CC0 license.
+TOKEN = os.getenv('FANTASIA_BOT_TOKEN')
 
 """
 First, a few callback functions are defined. Then, those functions are passed to
