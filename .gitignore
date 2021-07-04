@@ -8,6 +8,9 @@ MagicDatabaseDownloader/JupyterNotebooks/*.json
 MagicDatabaseDownloader/JupyterNotebooks/JSONs/*.json
 MagicDatabaseDownloader/JupyterNotebooks/*.jpg
 
+MagicDatabaseDownloader/JupyterNotebooks/card_img_test/output/*
+
+
 # --- JUPYTER NOTEBOOK GARBAGE FILES ---
 
 # Byte-compiled / optimized / DLL files
