@@ -179,22 +179,48 @@ void find_rectangle() {
 //from the card copy only the bigger_rect found
 Mat copy_to_cropped_rectangle() {
     Point starting_point;
+    Mat ret;
     starting_point.x = bigger_rect.center.x - bigger_rect.size.width / 2 + 1;
     starting_point.y = bigger_rect.center.y - bigger_rect.size.height / 2 + 1;
-    Mat ret = card(cv::Rect(starting_point.x, starting_point.y, bigger_rect.size.width, bigger_rect.size.height));
+    ret = card(cv::Rect(starting_point.x, starting_point.y, bigger_rect.size.width, bigger_rect.size.height));
     return ret;
 }
 
-//@param vector of vector of points
+double margine_error=1/REAL_L_C;
+bool isSimilar(float x, float y){
+  cout<<"Entra in isSimilar"<<endl;
+  cout<<"margine_error="<<margine_error<<endl;
+  if(x<y){
+    cout<<"x e' piu' piccolo di y, CAMBIO!"<<endl;
+    double change=y;
+    y=x;
+    x=change;
+  }
+  double rateo= x/y;
+  cout<<"rateo:"<<rateo<<endl;
+  cout<<"C_RATEO_HL:"<<C_RATEO_HL<<endl;
+  if(rateo/C_RATEO_HL>1-margine_error&&rateo/C_RATEO_HL<1+margine_error){
+    return true;
+  }
+  else return false;
+}
+
+//@param vector of vector of points of contours
 //@return The points that has the bigger rectangle
 //Finds the bigger rectangle in the vector of points
 RotatedRect find_bigger_rectangle(vector<vector<Point>> contours) {
     RotatedRect minRect = minAreaRect(contours[0]);
     for (int i = 1;i < contours.size();i++) {
         RotatedRect rect_cont = minAreaRect(contours[i]);
-        if (minRect.size.height + minRect.size.width < rect_cont.size.height + rect_cont.size.width) {
-            minRect = rect_cont;
-        }
+        if(minRect.center.x<0||minRect.center.y<0)
+            minRect=rect_cont;
+        else
+          if (minRect.size.height + minRect.size.width < rect_cont.size.height + rect_cont.size.width) {
+            if(rect_cont.center.x>0&&rect_cont.center.y>0){
+              if(isSimilar(rect_cont.size.width,rect_cont.size.height))
+              minRect = rect_cont;
+            }
+          }
     }
     return minRect;
 }

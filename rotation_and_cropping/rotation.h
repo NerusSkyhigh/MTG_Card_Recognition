@@ -25,6 +25,13 @@ using namespace cv;
 const int thresh_min = 128;
 const int thresh_max = 256;
 
+//real height and lenghts of a magic card
+#define REAL_H_C 88 //mm
+#define REAL_L_C 63 //mm
+//two rateo of the lenght of the card from the lenght of a real magic card
+#define C_RATEO_HL REAL_H_C/REAL_L_C
+#define C_RATEO_LH REAL_L_C/REAL_H_C
+
 //@param the image that needs to be rotated
 //@return the image rotated
 Mat rotate_card(Mat img);
