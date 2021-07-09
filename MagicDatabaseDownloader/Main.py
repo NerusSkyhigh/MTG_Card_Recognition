@@ -3,12 +3,11 @@ import MTGJsonDatabase
 from Index import Index
 import Cropper
 
+import pytesseract
 import pickle
 import os
 import logging
 import cv2
-
-import configparser
 
 
 
@@ -50,19 +49,24 @@ else:
         index = pickle.load(f)
 
 
+# Fase 2: Preparo il database
+while(True):
+    input("Press Enter to continue...")
+    image = cv2.imread('test.jpg')
+    image = Cropper.crop(image, grayscale=True)
+    cv2.imwrite("output.png", image)
 
-query = input("I'll give you the first results for a query. Enter #exit to leave:\n")#.split()
-query = index.standardize_keywords(query)
+    tesseract_text = pytesseract.image_to_string(image)
+    tesseract_text = str.rstrip(tesseract_text)
 
-while(not ("#exit" in query)):
+    query = index.standardize_keywords(tesseract_text)
+
     print("You entered:", query)
     ranking = index.ranked_search(query)
-    print("\n\n -------RANKING OUTPUT------------\n", ranking, "\n\n")
+    print("\n\n -------RANKING OUTPUT------------", len(ranking), "\n\n")
 
     ranking = sorted(ranking, key=ranking.get, reverse=True)
     if len(ranking) == 0:
         print("No card found")
     else:
         print(index.get_card(ranking[0]) )
-    query = input("I'll give you the first results for a query. Enter #exit to leave:\n")#.split()
-    query = index.standardize_keywords(query)
