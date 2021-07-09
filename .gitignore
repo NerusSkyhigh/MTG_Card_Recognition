@@ -10,6 +10,7 @@ MagicDatabaseDownloader/JupyterNotebooks/*.jpg
 
 MagicDatabaseDownloader/JupyterNotebooks/card_img_test/output/*
 
+*.pkl
 
 # --- JUPYTER NOTEBOOK GARBAGE FILES ---
 
