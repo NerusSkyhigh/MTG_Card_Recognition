@@ -6,8 +6,7 @@ import numpy as np
 def crop(image, grayscale=False):
     # Preprocessing of the image
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-    canny = cv2.Canny(blurred, 120, 255, 1)
+    canny = cv2.Canny(gray, 120, 255, 1)
 
     # Find contours
     contours, hierarchy = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -47,8 +46,7 @@ def crop(image, grayscale=False):
     # REPEAT THE PROCESS ON THE ROTATED IMAGE AND CROP THE CARD
     # ------------------------------------------------------------
     gray = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-    canny = cv2.Canny(blurred, 120, 255, 1)
+    canny = cv2.Canny(gray, 120, 255, 1)
 
     # Find contours
     contours, hierarchy = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -70,7 +68,17 @@ def crop(image, grayscale=False):
     minY = min(box[:, 0])
     maxY = max(box[:, 0])
 
+    result = result[minX:maxX, minY:maxY]
+    if maxX-minX < maxY-minY:
+        rot_mat = cv2.getRotationMatrix2D( ( (maxX-minX)/2, (maxX-minX)/2), -90, 1.0)
+        #cv2.imshow("titolo",result)
+        #cv2.waitKey(0)
+        result = cv2.warpAffine(result, rot_mat, (maxX-minX, maxY-minY), flags=cv2.INTER_LINEAR)
+        #cv2.imshow("titolo",result)
+        #cv2.waitKey(0)
+
+
     if grayscale:
-        return gray[minX:maxX, minY:maxY]
+        return cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
     else:
-        return result[minX:maxX, minY:maxY]
+        return result
