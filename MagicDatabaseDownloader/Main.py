@@ -17,6 +17,19 @@ import numpy as np
 img_url = "http://192.168.1.110:8080/photo.jpg"
 
 
+def rank(image):
+    tesseract_text = pytesseract.image_to_string(image)
+    tesseract_text = str.rstrip(tesseract_text)
+
+    query = index.standardize_keywords(tesseract_text)
+
+    ranking = index.ranked_search(query)
+    ranking = sorted(ranking, key=ranking.get, reverse=True)
+
+    return ranking, query
+
+
+
 # Fase 1: Preparo il database
 logging.basicConfig(level=logging.INFO)
 
@@ -59,8 +72,6 @@ else:
 
 
 
-
-
 # Fase 2: Preparo il database
 while(True):
     input("Press Enter to continue...")
@@ -75,22 +86,22 @@ while(True):
 
     #image = cv2.imread('test.jpg')
     image = Cropper.crop(image, grayscale=True)
-    cv2.imwrite("output.png", image)
+    #cv2.imwrite("output.png", image)
 
 
-    tesseract_text = pytesseract.image_to_string(image)
-    tesseract_text = str.rstrip(tesseract_text)
+    ranking, query = rank(image)
 
+    image = Cropper.rotate(image, (image.shape[1]/2, image.shape[0]/2), 180)
+    ranking_rot, query_rot = rank(image)
 
-    query = index.standardize_keywords(tesseract_text)
+    print("You entered:\n", query, "\n", query_rot)
 
-    print("You entered:", query)
-    ranking = index.ranked_search(query)
-    print("\n\n -------RANKING OUTPUT------------", len(ranking), "\n\n")
+    ranking = ranking if len(query) > len(query_rot) else ranking_rot
 
-    ranking = sorted(ranking, key=ranking.get, reverse=True)
     if len(ranking) == 0:
+        print("\n\n -------- NO CARD FOUND ------------", "\n\n")
         print("No card found")
     else:
+        print("\n\n -------- RANKING OUTPUT -----------", len(ranking), "\n\n")
         print("Name:", index.get_card(ranking[0])["name"] )
         pprint(index.get_card(ranking[0]) )
