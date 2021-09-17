@@ -16,6 +16,7 @@ class MTGJsonDatabase:
     sha256url:str
     magic_sets:dict
 
+
 # ---------------------- CONSTRUCTOR -----------------------
     def __init__(self):
         self._loadConfig()
