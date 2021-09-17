@@ -2,9 +2,13 @@ import re
 import logging
 
 class Index:
+
+
+
     def __init__(self):
         self.index = {}
         self.cards = {}
+        self.word_list = set()
 
     def add(self, card:dict, card_id:str, keywords:list):
         if card_id not in self.cards:
@@ -13,6 +17,7 @@ class Index:
         for keyword in keywords:
             if len(keyword) > 3:
                 if keyword not in self.index:
+                    self.word_list.add(keyword)
                     self.index[keyword] = set()
 
                 self.index[keyword].add(card_id)
@@ -45,7 +50,7 @@ class Index:
 
 
     # Utility functions
-    def standardize_keywords(self, text):
+    def standardize_keywords(self, text, ADDING_CARD=False):
         std_text = text.lower()
         # 0-9+\/
         std_text = re.sub('[^a-z\s]+', '', std_text)
@@ -53,6 +58,11 @@ class Index:
 
         keywords = set(std_text.split(' ') )
         keywords.discard('')
+
+        if not ADDING_CARD:
+            for kw in keywords.copy():
+                if not (kw in self.word_list):
+                    keywords.remove(kw)
 
         return keywords
 
@@ -68,53 +78,3 @@ class Index:
 
     def get_card(self, card_id):
         return self.cards.get(card_id, set())
-
-# -------------------------------------------------------------------
-
-if __name__ == "__main__":
-    import MTGJsonDatabase
-    # Create object
-    logging.basicConfig(level=logging.INFO)
-
-    db:MTGJsonDatabase = MTGJsonDatabase.MTGJsonDatabase()
-    db.Update()
-    magic_sets = db.toDictonary()
-
-
-    index = Index()
-    # Add cards into the database
-    for ms in magic_sets:
-        for card in magic_sets[ms]['cards']:
-            if 'paper' in card['availability']:
-                flavorText = card['flavorText'] if 'flavorText' in card else ''
-                originalText = card['originalText'] if 'originalText' in card else ''
-                text = card['text'] if 'text' in card else ''
-                name = card['name'] if 'name' in card else ''
-                flavorName = card['flavorName'] if 'flavorName' in card else ''
-                card_type = card['type'] if 'type' in card else ''
-                artist = card['artist'] if 'artist' in card else ''
-
-                all_text = flavorText+' '+ originalText+' '+ text+' '+ name+' '+\
-                           flavorName+' '+ card_type + ' '+ artist;
-                keywords = index.standardize_keywords(all_text)
-
-                card_id = ms+'-'+card['number']
-
-                index.add(card, card_id, keywords)
-
-
-    query = input("I'll give you the first results for a query. Enter #exit to leave:\n")#.split()
-    query = index.standardize_keywords(query)
-
-    while(not ("#exit" in query)):
-        print("You entered:", query)
-        ranking = index.ranked_search(query)
-        print("\n\n -------RANKING OUTPUT------------\n", ranking, "\n\n")
-
-        ranking = sorted(ranking, key=ranking.get, reverse=True)
-        if len(ranking) == 0:
-            print("No card found")
-        else:
-            print(index.get_card(ranking[0]) )
-        query = input("I'll give you the first results for a query. Enter #exit to leave:\n")#.split()
-        query = index.standardize_keywords(query)
