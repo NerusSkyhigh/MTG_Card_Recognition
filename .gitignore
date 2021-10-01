@@ -1,7 +1,10 @@
 MagicDatabaseDownloader/cards_db/
 MagicDatabaseDownloader/*.json
 MagicDatabaseDownloader/JSONs/*.json
+MagicDatabaseDownloader/Sqlite/*
 MagicDatabaseDownloader/*.jpg
+
+
 
 MagicDatabaseDownloader/JupyterNotebooks/cards_db/
 MagicDatabaseDownloader/JupyterNotebooks/*.json

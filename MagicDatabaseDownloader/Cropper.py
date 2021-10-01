@@ -10,21 +10,26 @@ def preprocessing(image):
     blur = cv2.GaussianBlur(gray,(1,1),0)
     canny = cv2.Canny(blur, 120, 255, 1)
 
+    cv2.imshow('Photo', blur)
+    cv2.waitKey()
+
     return canny
 
 
 
 def maxAreaRectangle(image):
     contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    
+
     # Sometimes opencv finds multiple rectangles.
     # I assume that the card is the contours that encloses the biggest area.
     maxArea = -1
     cMax = None
-    #test = image.copy()
-    #cv2.drawContours(test, contours, -1, (255,255,255), 1)
-    #cv2.imshow('TUTTI I CONTORNI', test)
-    #cv2.waitKey()
+
+    test = image.copy()
+    cv2.drawContours(test, contours, -1, (255,255,255), 1)
+    cv2.imshow('TUTTI I CONTORNI', test)
+    cv2.waitKey()
+
     for c in contours:
         rect_center, rect_shape, rect_angle = cv2.minAreaRect(c)
 
