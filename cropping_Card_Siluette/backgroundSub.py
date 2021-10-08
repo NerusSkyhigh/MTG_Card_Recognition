@@ -1,32 +1,48 @@
 print("Library:",end="...",flush=True)
 import cv2 as cv
 import numpy as np
+import requests
+
+img_url = "http://192.168.137.191:8080/photo.jpg"
+r = requests.get(img_url, stream=True)
 
 
 backSub = cv.createBackgroundSubtractorKNN()
 #backSub = cv.createBackgroundSubtractorMOG2()
 
-capture = cv.VideoCapture(0)
+#capture = cv.VideoCapture(0)
 
-if not capture.isOpened():
-    print('Unable to open')
-    exit(0)
-capture.set(cv.CAP_PROP_BUFFERSIZE,1)
-#RICORDA
+
+#if not capture.isOpened():
+#    print('Unable to open')
+#    exit(0)
+#capture.set(cv.CAP_PROP_BUFFERSIZE,1)
+# RICORDA
 #Fallo imparare con posizioni diverse del nastro
 
+def get_image(img_url):
+    r = requests.get(img_url, stream=True)
+    image = np.asarray(bytearray(r.content), dtype="uint8")
+    frame = cv.imdecode(image, cv.IMREAD_COLOR)
+    return frame
+
 background=[]
+
 def take_background_photo():
-	ret, frame = capture.read()
-	i=0
-	while i<10:
-		ret, frame = capture.read()
-		if frame is None:
-        		break
-		else:
+	#ret, frame = capture.read()
+    i=0
+    frame = get_image(img_url)
+
+    while i<10:
+		#ret, frame = capture.read()
+        frame = get_image(img_url)
+
+        if frame is None:
+            break
+        else:
 			#frame = cv.resize(frame, (800,800))
-			background.append(frame)
-		i=i+1
+            background.append(frame)
+        i=i+1
 
 
 def learning(backSub):
@@ -56,7 +72,8 @@ while True:
     if keyboard == "q":
         break
 
-    ret, frame = capture.read()
+    #ret, frame = capture.read()
+    frame = get_image(img_url)
 
     frame_taken=frame_taken+1
 
@@ -64,7 +81,7 @@ while True:
 
     fgMask = 0
     if(keyboard=="c"):
-    	fgMask = backSub.apply(frame,0.01)
+    	fgMask = backSub.apply(frame=frame, fgMask=fgMask, learningRate=0.01)
     else:
        	fgMask = backSub.apply(frame)
 

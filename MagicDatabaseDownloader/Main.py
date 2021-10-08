@@ -1,6 +1,7 @@
 # Main file that manage all the other files
 from Index import Index
 import Cropper
+from backgroundSub import *
 
 import pytesseract
 import pickle
@@ -19,7 +20,7 @@ import sqlite3
 from sqlite3 import Error
 
 #cameraID = 1
-img_url = "http://10.196.203.224:8080/photo.jpg"
+img_url = "http://192.168.137.191:8080/photo.jpg"
 
 
 logging.basicConfig(level=logging.INFO)
@@ -99,26 +100,27 @@ else:
 #logging.info("Connecting to cameraId="+str(cameraID) )
 #camera = cv2.VideoCapture(cameraID)
 
+# Fase 3: BackgroundSub
+bgs = BackgroundSub(img_url)
 
-# Fase 2: Preparo il database
+# Fase 4: Preparo il database
 while(True):
     input("Press a key to start the process")
 
     #_, image = camera.read()
-
-    r = requests.get(img_url, stream=True)
-    image = np.asarray(bytearray(r.content), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    image, fgMask = bgs.backgroundSub()
 
     cv2.imshow('Photo', image)
     cv2.waitKey()
+    cv2.destroyAllWindows()
 
     #image = cv2.imread('test.jpg')
-    image = Cropper.crop(image, grayscale=True)
+    image = Cropper.crop(image, fgMask, grayscale=True)
     #cv2.imwrite("output.png", image)
 
     cv2.imshow('Photo', image)
     cv2.waitKey()
+    cv2.destroyAllWindows()
 
     ranking, query = rank(image)
 

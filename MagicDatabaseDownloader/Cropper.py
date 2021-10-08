@@ -3,7 +3,7 @@ import numpy as np
 
 
 def preprocessing(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray = image.copy()#cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Blur allows for an easier detection of the image
     # as the contours are more likely to be closed.
@@ -12,6 +12,7 @@ def preprocessing(image):
 
     cv2.imshow('Photo', blur)
     cv2.waitKey()
+    cv2.destroyAllWindows()
 
     return canny
 
@@ -29,13 +30,13 @@ def maxAreaRectangle(image):
     cv2.drawContours(test, contours, -1, (255,255,255), 1)
     cv2.imshow('TUTTI I CONTORNI', test)
     cv2.waitKey()
-
+    cv2.destroyAllWindows()
     for c in contours:
         rect_center, rect_shape, rect_angle = cv2.minAreaRect(c)
-
         ratio = max(rect_shape)/(min(rect_shape)+1e-9)
-
-        if (rect_shape[0]*rect_shape[1] > maxArea) and (ratio < 1.5 and ratio > 1.3):
+        real_card_ratio=1.39
+        percentual=0.3
+        if (rect_shape[0]*rect_shape[1] > maxArea) and (ratio < real_card_ratio*(1+percentual) and ratio > real_card_ratio*(1-percentual)):
             cMax = c
             maxArea = rect_shape[0]*rect_shape[1]
 
@@ -53,9 +54,9 @@ def rotate(image, rect_center, rect_angle):
     return result
 
 
-def crop(image, grayscale=False):
+def crop(image, fgMask, grayscale=False):
     # Preprocessing of the image
-    canny = preprocessing(image)
+    canny = preprocessing(fgMask)
 
     cMax = maxAreaRectangle(canny)
 
