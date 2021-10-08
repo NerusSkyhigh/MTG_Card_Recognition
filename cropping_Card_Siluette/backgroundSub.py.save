@@ -1,0 +1,86 @@
+import cv2 as cv
+import numpy as np
+
+
+backSub = cv.createBackgroundSubtractorKNN()
+#backSub = cv.createBackgroundSubtractorMOG2()
+
+capture = cv.VideoCapture(0)
+
+if not capture.isOpened():
+    print('Unable to open')
+    exit(0)
+
+#RICORDA
+#Fallo imparare con posizioni diverse del nastro
+
+background=[]
+def take_background_photo():
+	ret, frame = capture.read()
+	ret, frame = capture.read()
+	i=0
+	while i<20:
+		ret, frame = capture.read()
+		if frame is None:
+        		break
+		else:
+			frame = cv.resize(frame, (800,800))
+
+			background.append(frame)
+		i=i+1
+
+
+def learning(backSub):
+	backSub = cv.createBackgroundSubtractorKNN()
+	i=0
+	for frame in background:
+		fgMask = backSub.apply(frame)
+	return backSub
+print("Library: Done")
+take_background_photo()
+backSub = learning(backSub)
+print("Learning process: Done")
+#append an image to a string
+#img.append(cv2.imread(str(i)+'.png'))
+frame_taken=0
+print("wait for key")
+cv.waitKey(5000)
+print("wait for key")
+cv.waitKey(5000)
+print("Ready to take a picture")
+
+cv.imshow('Frame', frame)
+cv.imshow('FG Mask', fgMask)
+
+
+while True:
+    keyboard = 0
+    keyboard = cv.waitKey(10000)
+    if keyboard == 'q' or keyboard == 27:
+        break
+    ret, frame = capture.read()
+    frame_taken=frame_taken+1
+    frame = cv.resize(frame, (800,800))
+
+    fgMask = 0
+    fgMask = backSub.apply(frame)
+
+
+    kernel = np.ones((5,5), np.uint8)
+
+    fgMask = cv.erode(fgMask, kernel, iterations=2)
+    fgMask = cv.dilate(fgMask, kernel, iterations=2)
+
+
+    fgMask[np.abs(fgMask) < 250] = 0
+
+    cv.imshow('Frame', frame)
+    cv.imshow('FG Mask', fgMask)
+    cv.imwrite('lol.png',fgMask)
+    print("Image written")
+    #append an image to a string
+    if frame_taken%3==0:
+        backSub=learning(backSub)
+
+print("Now Ending...")
+print("The And")
