@@ -63,25 +63,25 @@ class BackgroundSub:
 
     def backgroundSub(self):
         print("Taking picture after BGS")
-        while True:
-            #ret, frame = capture.read()
-            frame = get_image(self.img_url)
-            #frame = cv2.resize(frame, (800,800))
+    #while True:
+        #ret, frame = capture.read()
+        frame = get_image(self.img_url)
+        #frame = cv2.resize(frame, (800,800))
 
-            fgMask = frame.copy()
-            fgMask = self.backSub.apply(image=frame, fgmask=fgMask, learningRate=0.01)
+        fgMask = frame.copy()
+        fgMask = self.backSub.apply(image=frame, fgmask=fgMask, learningRate=0.01)
 
-            kernel = np.ones((3,3), np.uint8)
+        kernel = np.ones((3,3), np.uint8)
 
-            fgMask = cv2.erode(fgMask, kernel, iterations=2)
-            fgMask = cv2.dilate(fgMask, kernel, iterations=2)
+        fgMask = cv2.erode(fgMask, kernel, iterations=2)
+        fgMask = cv2.dilate(fgMask, kernel, iterations=2)
 
-            fgMask[np.abs(fgMask) < 250] = 0
-            #cv2.imshow("Mask frame", fgMask)
-            #cv2.waitKey(0)
-            #cv2.destroyAllWindows()
-            #keyboard=input("Wanna retry? y/n")
-            #if(keyboard!="y"):
-            #    break
+        fgMask[np.abs(fgMask) < 250] = 0
+        #cv2.imshow("Mask frame", fgMask)
+        #cv2.waitKey(0)
+        #cv2.destroyAllWindows()
+        #keyboard=input("Wanna retry? y/n")
+        #if(keyboard!="y"):
+        #    break
 
         return frame, fgMask
