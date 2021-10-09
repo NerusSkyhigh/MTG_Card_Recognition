@@ -33,10 +33,9 @@ class BackgroundSub:
     def __init__(self, img_url, n_photo=10):
         self.img_url = img_url
 
-        print("Taking photos:",end="...",flush=True)
+        print("Taking photos",end="...",flush=True)
         self.take_background_photo(n_photo)
-        print("Done")
-        print("Learning process:",end="...",flush=True)
+        print("Done. Learning process",end="...",flush=True)
         self.learning()
         print("Done")
 
@@ -44,7 +43,7 @@ class BackgroundSub:
     	#ret, frame = capture.read()
         frame = get_image(self.img_url)
         for i in range(n_photo):
-            print(i)
+            print(i, " ",end="")
             frame = get_image(self.img_url)
             #ret, frame = capture.read()
 
@@ -78,11 +77,11 @@ class BackgroundSub:
             fgMask = cv2.dilate(fgMask, kernel, iterations=2)
 
             fgMask[np.abs(fgMask) < 250] = 0
-            cv2.imshow("Mask frame", fgMask)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-            keyboard=input("Wanna retry? y/n")
-            if(keyboard!="y"):
-                break
+            #cv2.imshow("Mask frame", fgMask)
+            #cv2.waitKey(0)
+            #cv2.destroyAllWindows()
+            #keyboard=input("Wanna retry? y/n")
+            #if(keyboard!="y"):
+            #    break
 
         return frame, fgMask

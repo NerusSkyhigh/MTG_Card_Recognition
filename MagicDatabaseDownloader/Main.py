@@ -20,7 +20,7 @@ import sqlite3
 from sqlite3 import Error
 
 #cameraID = 1
-img_url = "http://192.168.137.191:8080/photo.jpg"
+img_url = "http://192.168.1.109:8080/photo.jpg"
 
 
 logging.basicConfig(level=logging.INFO)
@@ -110,17 +110,17 @@ while(True):
     #_, image = camera.read()
     image, fgMask = bgs.backgroundSub()
 
-    cv2.imshow('Photo', image)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    #cv2.imshow('Photo', image)
+    #cv2.waitKey()
+    #cv2.destroyAllWindows()
 
     #image = cv2.imread('test.jpg')
     image = Cropper.crop(image, fgMask, grayscale=True)
     #cv2.imwrite("output.png", image)
 
-    cv2.imshow('Photo', image)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    #cv2.imshow('Photo', image)
+    #cv2.waitKey()
+    #cv2.destroyAllWindows()
 
     ranking, query = rank(image)
 
