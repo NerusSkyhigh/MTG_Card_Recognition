@@ -63,7 +63,9 @@ def rank(image):
 
 # Fase 1: Preparo la connessione con il database
 def execute_read_query(connection, query):
-    cursor = connection.cursor()
+    # In theory we don't actually need a cursor
+    #   https://remusao.github.io/posts/few-tips-sqlite-perf.html
+    cursor = connection#.cursor()
     result = None
     try:
         cursor.execute(query)
