@@ -43,7 +43,7 @@ class BackgroundSub:
     	#ret, frame = capture.read()
         frame = get_image(self.img_url)
         for i in range(n_photo):
-            print(i, " ",end="")
+            print(i, " ",end="", flush=True)
             frame = get_image(self.img_url)
             #ret, frame = capture.read()
 
@@ -69,7 +69,7 @@ class BackgroundSub:
         #frame = cv2.resize(frame, (800,800))
 
         fgMask = frame.copy()
-        fgMask = self.backSub.apply(image=frame, fgmask=fgMask, learningRate=0.01)
+        self.backSub.apply(image=frame, fgmask=fgMask, learningRate=0)
 
         kernel = np.ones((3,3), np.uint8)
 
