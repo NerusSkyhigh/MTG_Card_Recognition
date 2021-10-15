@@ -20,7 +20,7 @@ import sqlite3
 from sqlite3 import Error
 
 #cameraID = 1
-img_url = "http://192.168.137.191:8080/photo.jpg"
+img_url = "http://192.168.43.167:8080/photo.jpg"
 
 
 logging.basicConfig(level=logging.INFO)

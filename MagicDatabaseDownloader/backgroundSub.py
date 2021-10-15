@@ -72,7 +72,7 @@ class BackgroundSub:
             fgMask = frame.copy()
             fgMask = self.backSub.apply(image=frame, fgmask=fgMask, learningRate=0.01)
 
-            kernel = np.ones((3,3), np.uint8)
+            kernel = np.ones((5,5), np.uint8)
 
             fgMask = cv2.erode(fgMask, kernel, iterations=2)
             fgMask = cv2.dilate(fgMask, kernel, iterations=2)
