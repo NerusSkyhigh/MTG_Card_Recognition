@@ -1,5 +1,5 @@
-#ifndef __VERSE_AND_SET_H__
-#define __VERSE_AND_SET_H__
+#ifndef __SET_RECOG_H__
+#define __SET_RECOG_H__
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
@@ -21,14 +21,15 @@ using namespace cv;
 #define BLACKTOWHITE true
 
 
+	string find_set(Mat img);
 	Mat copy_rectangle(Mat imm, Point start, int cols, int rows);
-	void verse_and_set(Mat img);
 	double somm_diff(Mat trov);
 	double somm_diff(Mat trov, Mat templ);
-	void find_symbol_center(Point ret[2]);
+	void find_symbol_center(Point ret);
+
 	void bound_control(int& point, int lim);
 	void recursive_testing(int i);
-	string find_verse_set();
+	string get_name_of_set();
 	void get_templ(const string path);
 
 	void match_templ(Mat extract, vector<double>& mins);
