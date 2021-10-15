@@ -63,7 +63,9 @@ def rank(image):
 
 # Fase 1: Preparo la connessione con il database
 def execute_read_query(connection, query):
-    cursor = connection.cursor()
+    # In theory we don't actually need a cursor
+    #   https://remusao.github.io/posts/few-tips-sqlite-perf.html
+    cursor = connection#.cursor()
     result = None
     try:
         cursor.execute(query)
@@ -110,17 +112,17 @@ while(True):
     #_, image = camera.read()
     image, fgMask = bgs.backgroundSub()
 
-    cv2.imshow('Photo', image)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    #cv2.imshow('Photo', image)
+    #cv2.waitKey()
+    #cv2.destroyAllWindows()
 
     #image = cv2.imread('test.jpg')
     image = Cropper.crop(image, fgMask, grayscale=True)
     #cv2.imwrite("output.png", image)
 
-    cv2.imshow('Photo', image)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    #cv2.imshow('Photo', image)
+    #cv2.waitKey()
+    #cv2.destroyAllWindows()
 
     ranking, query = rank(image)
 
