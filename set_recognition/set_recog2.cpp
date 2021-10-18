@@ -5,12 +5,11 @@
 #include <iostream>
 #include<cstring>
 */
-
 Mat templ;
 Mat crop_img;
-vector<String> fn;
-vector<float> mins_crop_img;
-const char* png_dir = "C:/Users/User/Desktop/Mtg_set_symbols";/*.png";
+vector<string> fn;
+vector<double> mins_crop_img;
+const char* png_dir = "C:/Users/User/Desktop/Mtg_set_symbols/*.png";
 /**/
 const int match_method = 0;//TM_SQDIFF
 int radius_h;
@@ -32,8 +31,7 @@ Mat card;
 //
 //
 //
-
-String find_set(Mat img) {
+string find_set(Mat img) {
 	card = img;
 	glob(png_dir, fn, true);
 	if (fn.size() < 1) {
@@ -193,7 +191,7 @@ void recursive_testing(int i) {
 
 
 //find the verse of the card with a comperison of the similarity
-String get_name_of_set() {
+string get_name_of_set() {
 	double minAss_crop_img = 4200;
 	int pos_minAss_crop_img = 0;
 	for (int i = 0;i < mins_crop_img.size();i++) {
@@ -208,9 +206,9 @@ String get_name_of_set() {
 	return fn[pos_minAss_crop_img];
 }
 
-/*
+
 //Test on the verse of the card based on a card template
-Mat test_verse_1() {
+/*Mat test_verse_1() {
 	cout << "Testo il verso:";
 	Mat templ_probable_sim = imread(templ_probable_sim_path, IMREAD_COLOR);
 	double sm_dx = somm_diff(dx, templ_probable_sim);
@@ -225,7 +223,7 @@ Mat test_verse_1() {
 //adds the mininimal result of the matchTemplate algorithm in "mins"
 //@param the extract of the card, I imagine
 //@param stores the minimal value of the match
-void match_templ(Mat extract, vector<float> &mins) {
+void match_templ(Mat extract, vector<double>& mins) {
 	//This is how the algorithm works
 	//it needs how many times the image will be applied
 	//in the "extract"
@@ -247,7 +245,7 @@ void match_templ(Mat extract, vector<float> &mins) {
 	matchLoc = minLoc;
 	Mat img_extract = copy_rectangle(extract, matchLoc, templ.cols, templ.rows);
 	//cout << i << ":" << "Max/Min: " << matchVal << endl;
-	mins.push_back((float)somm_diff(img_extract));
+	mins.push_back(somm_diff(img_extract));
 	if (SHOWOUTPUT && SHOWEXRACTS) {
 		cout << "Ranking:" << mins.back() << endl;
 		rectangle(extract, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
@@ -263,7 +261,7 @@ void match_templ(Mat extract, vector<float> &mins) {
 //converts all white pixels in black pixels in white
 //And scale the symbol accordingly to the dimention of the image
 //@param the name of the symbol in the dirctoty where the images are stored
-void get_templ(const String path) {
+void get_templ(const string path) {
 	//takes the image from the file
 	//WARNING: path needs to change accordingly
 	templ = imread(path, IMREAD_COLOR);
@@ -298,10 +296,7 @@ void get_templ(const String path) {
 	resize(templ, templ, new_templ_size, scale, scale, INTER_AREA);
 }
 
-
-int main(int argc, char*argv[]){
-	vector<float> prova;
-	prova.push_back(0.1);
+int main(){
 	cout<<"it just works";
 	return 2;
 }

@@ -4,11 +4,13 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include <iostream>
-#include<cstring>
+#include<vector>
+//#include<cstring>
 using namespace std;
 using namespace cv;
 //const char* png_dir = "C:/Users/User/Desktop/Mtg_set_symbols_jpg/*.jpg";
-//const char* png_dir = "C:/Users/User/Desktop/Mtg_set_symbols_with_exeptios/*.png";
+//const char* png_dir = "C:/Users/User/Desktop/Mtg_set_symbols_with_exeptios";/*.png";
+/**/
 #define CONST_RADIUS 16
 #define CONST_RADIUS_LON_H 2.5
 
@@ -21,7 +23,7 @@ using namespace cv;
 #define BLACKTOWHITE true
 
 
-	string find_set(Mat img);
+	String find_set(Mat img);
 	Mat copy_rectangle(Mat imm, Point start, int cols, int rows);
 	double somm_diff(Mat trov);
 	double somm_diff(Mat trov, Mat templ);
@@ -29,10 +31,10 @@ using namespace cv;
 
 	void bound_control(int& point, int lim);
 	void recursive_testing(int i);
-	string get_name_of_set();
-	void get_templ(const string path);
+	String get_name_of_set();
+	void get_templ(const String path);
 
-	void match_templ(Mat extract, vector<double>& mins);
+	void match_templ(Mat extract, vector<float>& mins);
 
 
 #endif
