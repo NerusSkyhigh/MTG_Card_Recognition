@@ -9,8 +9,15 @@
 # Not even the python pickles
 *.pkl
 
+# But upload them if we explicitly say so
+!*.up.json
+!*.up.sqlite
+!*.up.png
+!*.up.jpg
+!*.up.pkl
 
-
+# Temporary files
+*.save
 
 
 # --- JUPYTER NOTEBOOK GARBAGE FILES ---
