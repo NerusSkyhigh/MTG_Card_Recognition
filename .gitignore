@@ -1,19 +1,24 @@
-MagicDatabaseDownloader/cards_db/
-MagicDatabaseDownloader/*.json
-MagicDatabaseDownloader/JSONs/*.json
-MagicDatabaseDownloader/Sqlite/*
-MagicDatabaseDownloader/*.jpg
+# Don't upload the databases
+*.json
+*.sqlite
 
+# Or the png/jpg images
+*.png
+*.jpg
 
-
-MagicDatabaseDownloader/JupyterNotebooks/cards_db/
-MagicDatabaseDownloader/JupyterNotebooks/*.json
-MagicDatabaseDownloader/JupyterNotebooks/JSONs/*.json
-MagicDatabaseDownloader/JupyterNotebooks/*.jpg
-
-MagicDatabaseDownloader/JupyterNotebooks/card_img_test/output/*
-
+# Not even the python pickles
 *.pkl
+
+# But upload them if we explicitly say so
+!*.up.json
+!*.up.sqlite
+!*.up.png
+!*.up.jpg
+!*.up.pkl
+
+# Temporary files
+*.save
+
 
 # --- JUPYTER NOTEBOOK GARBAGE FILES ---
 
