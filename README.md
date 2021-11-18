@@ -89,3 +89,6 @@ https://qengineering.eu/install-opencv-4.4-on-raspberry-pi-4.html
 
 
 https://towardsdatascience.com/a-quick-and-easy-guide-to-code-profiling-in-python-58c0ed7e602b
+
+
+https://www.overleaf.com/project/61961a2eb27caef307939577
